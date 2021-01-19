@@ -12,13 +12,13 @@ namespace vkfetch
 
         internal unsafe static void Main(string[] args)
         {
-            VulkanUtils.CreateVkInfo("vkfetch", out var applicationInfo, out var instInfo);
+            VulkanUtils.CreateVkInfo("vkfetch", out var appInfo, out var instanceInfo);
 
             var vk = Vk.GetApi();
 
             fixed (Instance* instance = &_instance)
             {
-                if (vk.CreateInstance(&instInfo, null, instance) != Result.Success)
+                if (vk.CreateInstance(&instanceInfo, null, instance) != Result.Success)
                 {
                     Console.WriteLine("Failed to create vulkan instance");
                     return;

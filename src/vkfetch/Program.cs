@@ -1,12 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using Silk.NET.Core;
-using Silk.NET.Core.Native;
 using Silk.NET.Vulkan;
-using Silk.NET.Windowing;
 
 namespace vkfetch
 {
@@ -17,27 +12,13 @@ namespace vkfetch
 
         internal unsafe static void Main(string[] args)
         {
-            var appInfo = new ApplicationInfo
-            {
-                SType = StructureType.ApplicationInfo,
-                PApplicationName = (byte*)Marshal.StringToHGlobalAnsi("vkfetch"),
-                ApplicationVersion = new Version32(1, 0, 0),
-                PEngineName = (byte*)Marshal.StringToHGlobalAnsi("No Engine"),
-                EngineVersion = new Version32(1, 0, 0),
-                ApiVersion = Vk.Version12
-            };
-
-            var instanceInfo = new InstanceCreateInfo
-            {
-                SType = StructureType.InstanceCreateInfo,
-                PApplicationInfo = &appInfo
-            };
+            VulkanUtils.CreateVkInfo("vkfetch", out var applicationInfo, out var instInfo);
 
             var vk = Vk.GetApi();
 
             fixed (Instance* instance = &_instance)
             {
-                if (vk.CreateInstance(&instanceInfo, null, instance) != Result.Success)
+                if (vk.CreateInstance(&instInfo, null, instance) != Result.Success)
                 {
                     Console.WriteLine("Failed to create vulkan instance");
                     return;

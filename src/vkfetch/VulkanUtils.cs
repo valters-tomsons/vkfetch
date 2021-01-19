@@ -1,16 +1,14 @@
-using System;
 using System.Runtime.InteropServices;
 using Silk.NET.Core;
 using Silk.NET.Vulkan;
-using Silk.NET.Windowing;
 
 namespace vkfetch
 {
-    public unsafe static class VulkanUtils
+    public static class VulkanUtils
     {
-        public static void CreateInstance(Vk apiInstance, Instance vkInstance, string appName)
+        public unsafe static void CreateVkInfo(string appName, out ApplicationInfo applicationInfo, out InstanceCreateInfo instanceCreateInfo)
         {
-            var appInfo = new ApplicationInfo
+            applicationInfo = new ApplicationInfo
             {
                 SType = StructureType.ApplicationInfo,
                 PApplicationName = (byte*)Marshal.StringToHGlobalAnsi(appName),
@@ -20,17 +18,13 @@ namespace vkfetch
                 ApiVersion = Vk.Version12
             };
 
-            var instanceInfo = new InstanceCreateInfo
+            fixed (ApplicationInfo* appInfo = &applicationInfo)
             {
-                SType = StructureType.InstanceCreateInfo,
-                PApplicationInfo = &appInfo
-            };
-
-            var result = apiInstance.CreateInstance(&instanceInfo, null, &vkInstance);
-
-            if(result != Result.Success)
-            {
-                throw new NotImplementedException();
+                instanceCreateInfo = new InstanceCreateInfo
+                {
+                    SType = StructureType.InstanceCreateInfo,
+                    PApplicationInfo = appInfo
+                };
             }
         }
     }

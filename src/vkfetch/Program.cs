@@ -56,19 +56,18 @@ namespace vkfetch
                 }
             }
 
+            var driverId = driverProps.DriverID.ToString().Replace("DriverID", string.Empty);
+            Console.WriteLine($"DriverId: {driverId}");
+
             var ver = driverProps.ConformanceVersion;
-
-            Console.WriteLine("DriverId: ");
-            Console.WriteLine(driverProps.DriverID.ToString().Replace("DriverID", string.Empty));
-
-            Console.WriteLine("Vulkan Version: ");
-            Console.WriteLine($"{ver.Major}.{ver.Minor}.{ver.Patch}.{ver.Subminor}");
+            var conformanceVersion = $"{ver.Major}.{ver.Minor}.{ver.Patch}.{ver.Subminor}";
+            Console.WriteLine($"Conformance Version: {conformanceVersion}");
 
             var str = Marshal.PtrToStringUTF8((IntPtr)driverProps.DriverInfo);
-            Console.WriteLine(str);
+            Console.WriteLine($"Driver Info: {str}");
 
             var str1 = Marshal.PtrToStringUTF8((IntPtr)driverProps.DriverName);
-            Console.WriteLine(str1);
+            Console.WriteLine($"Driver Name: {str1}");
         }
     }
 }

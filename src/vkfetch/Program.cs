@@ -25,13 +25,7 @@ namespace vkfetch
 
             var physicalDevice = devices.ElementAt(0);
 
-            var physicalProps = new PhysicalDeviceProperties2();
-            var driverProps = new PhysicalDeviceDriverProperties();
-
-            physicalProps.PNext = &driverProps;
-            driverProps.SType = StructureType.PhysicalDeviceDriverProperties;
-
-            _vk.GetPhysicalDeviceProperties2(physicalDevice, &physicalProps);
+            VulkanUtils.GetVkPhysicalDeviceProperties2(_vk, physicalDevice, out var physicalProps, out var driverProps);
 
             var deviceInfo = new DeviceCreateInfo() {
                 SType = StructureType.DeviceCreateInfo,

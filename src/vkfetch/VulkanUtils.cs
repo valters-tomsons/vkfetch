@@ -39,5 +39,26 @@ namespace vkfetch
                 }
             }
         }
+
+        public static void GetVkPhysicalDeviceProperties2(Vk vk, PhysicalDevice device, out PhysicalDeviceProperties2 deviceProperties, out PhysicalDeviceDriverProperties driverProperties)
+        {
+            driverProperties = new PhysicalDeviceDriverProperties
+            {
+                SType = StructureType.PhysicalDeviceDriverProperties,
+            };
+
+            fixed(PhysicalDeviceDriverProperties* props = &driverProperties)
+            {
+                deviceProperties = new PhysicalDeviceProperties2
+                {
+                    PNext = props
+                };
+            }
+
+            fixed (PhysicalDeviceProperties2* props = &deviceProperties)
+            {
+                vk.GetPhysicalDeviceProperties2(device, props);
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace vkfetch
         internal unsafe static void Main(string[] args)
         {
             VulkanUtils.CreateVkInfo("vkfetch", out var appInfo, out var instanceInfo);
-            VulkanUtils.CreateInstance(_vk, instanceInfo, out var instance);
+            VulkanUtils.CreateVkInstance(_vk, instanceInfo, out var instance);
 
             var devices = _vk.GetPhysicalDevices(instance);
 

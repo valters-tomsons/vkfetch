@@ -4,9 +4,9 @@ using Silk.NET.Vulkan;
 
 namespace vkfetch
 {
-    public static class VulkanUtils
+    public unsafe static class VulkanUtils
     {
-        public unsafe static void CreateVkInfo(string appName, out ApplicationInfo applicationInfo, out InstanceCreateInfo instanceCreateInfo)
+        public static void CreateVkInfo(string appName, out ApplicationInfo applicationInfo, out InstanceCreateInfo instanceCreateInfo)
         {
             applicationInfo = new ApplicationInfo
             {
@@ -26,7 +26,7 @@ namespace vkfetch
             }
         }
 
-        public unsafe static void CreateInstance(Vk vk, InstanceCreateInfo instanceCreateInfo, out Instance instance)
+        public static void CreateVkInstance(Vk vk, InstanceCreateInfo instanceCreateInfo, out Instance instance)
         {
             fixed (Instance* _instance = &instance)
             {

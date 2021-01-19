@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
@@ -22,6 +23,20 @@ namespace vkfetch
                     SType = StructureType.InstanceCreateInfo,
                     PApplicationInfo = appInfo
                 };
+            }
+        }
+
+        public unsafe static void CreateInstance(Vk vk, InstanceCreateInfo instanceCreateInfo, out Instance instance)
+        {
+            fixed (Instance* _instance = &instance)
+            {
+                var result = vk.CreateInstance(&instanceCreateInfo, null, _instance);
+
+                if (result != Result.Success)
+                {
+                    Console.WriteLine("Failed to create vulkan instance");
+                    return;
+                }
             }
         }
     }

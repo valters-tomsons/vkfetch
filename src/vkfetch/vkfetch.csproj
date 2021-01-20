@@ -10,15 +10,14 @@
     <PublishSingleFile>true</PublishSingleFile>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Silk.NET" Version="2.0.0" />
     <PackageReference Include="Silk.NET.Vulkan" Version="2.0.0" />
-    <PackageReference Include="Silk.NET.Windowing" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

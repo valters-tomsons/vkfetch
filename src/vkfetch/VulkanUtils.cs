@@ -60,5 +60,21 @@ namespace vkfetch
                 vk.GetPhysicalDeviceProperties2(device, props);
             }
         }
+
+        public static void CreateVkDevice(Vk vk, PhysicalDevice physicalDevice, out Device device)
+        {
+            var deviceInfo = new DeviceCreateInfo() {
+                SType = StructureType.DeviceCreateInfo,
+            };
+
+            fixed (Device* _device = &device)
+            {
+                if (vk.CreateDevice(physicalDevice, &deviceInfo, null, _device) != Result.Success)
+                {
+                    Console.WriteLine("Failed to create vulkan device");
+                    return;
+                }
+            }
+        }
     }
 }

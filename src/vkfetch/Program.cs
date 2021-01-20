@@ -7,12 +7,11 @@ namespace vkfetch
 {
     internal static class Program
     {
-        private static Device _device;
         private static readonly Vk _vk = Vk.GetApi();
 
         internal unsafe static void Main(string[] args)
         {
-            VulkanUtils.CreateVkInfo("vkfetch", out var appInfo, out var instanceInfo);
+            VulkanUtils.CreateVkInfo("vkfetch", out var _, out var instanceInfo);
             VulkanUtils.CreateVkInstance(_vk, instanceInfo, out var instance);
 
             var devices = _vk.GetPhysicalDevices(instance);
@@ -26,19 +25,7 @@ namespace vkfetch
             var physicalDevice = devices.ElementAt(0);
 
             VulkanUtils.GetVkPhysicalDeviceProperties2(_vk, physicalDevice, out var physicalProps, out var driverProps);
-
-            var deviceInfo = new DeviceCreateInfo() {
-                SType = StructureType.DeviceCreateInfo,
-            };
-
-            fixed (Device* device = &_device)
-            {
-                if (_vk.CreateDevice(physicalDevice, &deviceInfo, null, device) != Result.Success)
-                {
-                    Console.WriteLine("Failed to create vulkan device");
-                    return;
-                }
-            }
+            VulkanUtils.CreateVkDevice(_vk, physicalDevice, out var _);
 
             Console.WriteLine();
 

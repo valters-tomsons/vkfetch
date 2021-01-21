@@ -23,4 +23,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Publish
       run: dotnet publish --no-restore -c Release -o publish
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: vkfetch-publish
+        path: ./publish
       

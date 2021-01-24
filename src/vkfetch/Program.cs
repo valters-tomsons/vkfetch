@@ -29,24 +29,24 @@ namespace vkfetch
 
             Console.WriteLine();
 
+            var str1 = Marshal.PtrToStringUTF8((IntPtr)driverProps.DriverName);
+            Console.WriteLine($"Driver Name: {str1}");
+
             var driverId = driverProps.DriverID.ToString().Replace("DriverID", string.Empty);
             Console.WriteLine($"DriverId: {driverId}");
+
+            var deviceName = Marshal.PtrToStringUTF8((IntPtr)physicalProps.Properties.DeviceName);
+            Console.WriteLine($"Device Name: {deviceName}");
+
+            var str = Marshal.PtrToStringUTF8((IntPtr)driverProps.DriverInfo);
+            Console.WriteLine($"Driver Info: {str}");
 
             var ver = driverProps.ConformanceVersion;
             var conformanceVersion = $"{ver.Major}.{ver.Minor}.{ver.Patch}.{ver.Subminor}";
             Console.WriteLine($"Conformance Version: {conformanceVersion}");
 
-            var str = Marshal.PtrToStringUTF8((IntPtr)driverProps.DriverInfo);
-            Console.WriteLine($"Driver Info: {str}");
-
-            var str1 = Marshal.PtrToStringUTF8((IntPtr)driverProps.DriverName);
-            Console.WriteLine($"Driver Name: {str1}");
-
-            var deviceName = Marshal.PtrToStringUTF8((IntPtr)physicalProps.Properties.DeviceName);
-            Console.WriteLine($"Device Name: {deviceName}");
-
-            var vendorId = physicalProps.Properties.VendorID.ToString("x0");
-            Console.WriteLine($"VendorId: 0x{vendorId}");
+            VulkanUtils.EnumerateInstanceExtensions(_vk, out var extensions);
+            Console.WriteLine($"Supported extensions: {extensions.Length}");
         }
     }
 }

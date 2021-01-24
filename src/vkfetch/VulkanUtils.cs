@@ -80,13 +80,10 @@ namespace vkfetch
         public static void EnumerateInstanceExtensions(Vk vk, out ExtensionProperties[] extensions)
         {
             uint extcount;
-
             vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, null);
 
-            var extprops = new ExtensionProperties[extcount];
-            vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, extprops);
-
-            extensions = extprops;
+            extensions = new ExtensionProperties[extcount];
+            vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, extensions);
         }
     }
 }

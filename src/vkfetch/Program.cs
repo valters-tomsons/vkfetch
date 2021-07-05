@@ -22,8 +22,15 @@ namespace vkfetch
                 return;
             }
 
-            var physicalDevice = devices.ElementAt(0);
+            for(var i = 0; i < devices.Count; i++)
+            {
+                var dev = devices.ElementAt(i);
+                PrintDevice(dev);
+            }
+        }
 
+        private unsafe static void PrintDevice(PhysicalDevice physicalDevice)
+        {
             VulkanUtils.GetVkPhysicalDeviceProperties2(_vk, physicalDevice, out var physicalProps, out var driverProps);
             VulkanUtils.CreateVkDevice(_vk, physicalDevice, out var _);
 

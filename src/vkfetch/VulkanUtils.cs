@@ -2,88 +2,70 @@ using System;
 using System.Runtime.InteropServices;
 using Silk.NET.Vulkan;
 
-namespace vkfetch
+namespace vkfetch;
+
+public unsafe static class VulkanUtils
 {
-    public unsafe static class VulkanUtils
+    public static void CreateVkInfo(string appName, out ApplicationInfo applicationInfo, out InstanceCreateInfo instanceCreateInfo)
     {
-        public static void CreateVkInfo(string appName, out ApplicationInfo applicationInfo, out InstanceCreateInfo instanceCreateInfo)
+        applicationInfo = new ApplicationInfo
         {
-            applicationInfo = new ApplicationInfo
-            {
-                SType = StructureType.ApplicationInfo,
+            SType = StructureType.ApplicationInfo,
+            PApplicationName = (byte*)Marshal.StringToHGlobalAnsi(appName),
+            ApiVersion = Vk.Version12
+        };
 
-                PApplicationName = (byte*)Marshal.StringToHGlobalAnsi(appName),
-                ApiVersion = Vk.Version12
+        fixed (ApplicationInfo* appInfo = &applicationInfo)
+        {
+            instanceCreateInfo = new InstanceCreateInfo
+            {
+                SType = StructureType.InstanceCreateInfo,
+                PApplicationInfo = appInfo
             };
+        }
+    }
 
-            fixed (ApplicationInfo* appInfo = &applicationInfo)
+    public static void CreateVkInstance(Vk vk, InstanceCreateInfo instanceCreateInfo, out Instance instance)
+    {
+        fixed (Instance* _instance = &instance)
+        {
+            var result = vk.CreateInstance(&instanceCreateInfo, null, _instance);
+
+            if (result != Result.Success)
             {
-                instanceCreateInfo = new InstanceCreateInfo
-                {
-                    SType = StructureType.InstanceCreateInfo,
-                    PApplicationInfo = appInfo
-                };
+                Console.WriteLine("Failed to create vulkan instance");
+                return;
             }
         }
+    }
 
-        public static void CreateVkInstance(Vk vk, InstanceCreateInfo instanceCreateInfo, out Instance instance)
+    public static void GetVkPhysicalDeviceProperties2(Vk vk, PhysicalDevice device, out PhysicalDeviceProperties2 deviceProperties, out PhysicalDeviceDriverProperties driverProperties)
+    {
+        driverProperties = new PhysicalDeviceDriverProperties
         {
-            fixed (Instance* _instance = &instance)
-            {
-                var result = vk.CreateInstance(&instanceCreateInfo, null, _instance);
+            SType = StructureType.PhysicalDeviceDriverProperties,
+        };
 
-                if (result != Result.Success)
-                {
-                    Console.WriteLine("Failed to create vulkan instance");
-                    return;
-                }
-            }
-        }
-
-        public static void GetVkPhysicalDeviceProperties2(Vk vk, PhysicalDevice device, out PhysicalDeviceProperties2 deviceProperties, out PhysicalDeviceDriverProperties driverProperties)
+        fixed (PhysicalDeviceDriverProperties* props = &driverProperties)
         {
-            driverProperties = new PhysicalDeviceDriverProperties
+            deviceProperties = new PhysicalDeviceProperties2
             {
-                SType = StructureType.PhysicalDeviceDriverProperties,
+                PNext = props
             };
-
-            fixed(PhysicalDeviceDriverProperties* props = &driverProperties)
-            {
-                deviceProperties = new PhysicalDeviceProperties2
-                {
-                    PNext = props
-                };
-            }
-
-            fixed (PhysicalDeviceProperties2* props = &deviceProperties)
-            {
-                vk.GetPhysicalDeviceProperties2(device, props);
-            }
         }
 
-        public static void CreateVkDevice(Vk vk, PhysicalDevice physicalDevice, out Device device)
+        fixed (PhysicalDeviceProperties2* props = &deviceProperties)
         {
-            var deviceInfo = new DeviceCreateInfo() {
-                SType = StructureType.DeviceCreateInfo,
-            };
-
-            fixed (Device* _device = &device)
-            {
-                if (vk.CreateDevice(physicalDevice, &deviceInfo, null, _device) != Result.Success)
-                {
-                    Console.WriteLine("Failed to create vulkan device");
-                    return;
-                }
-            }
+            vk.GetPhysicalDeviceProperties2(device, props);
         }
+    }
 
-        public static void EnumerateInstanceExtensions(Vk vk, out ExtensionProperties[] extensions)
-        {
-            uint extcount;
-            vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, null);
+    public static void EnumerateInstanceExtensions(Vk vk, out ExtensionProperties[] extensions)
+    {
+        uint extcount;
+        vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, null);
 
-            extensions = new ExtensionProperties[extcount];
-            vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, extensions);
-        }
+        extensions = new ExtensionProperties[extcount];
+        vk.EnumerateInstanceExtensionProperties((byte*)IntPtr.Zero, &extcount, extensions);
     }
 }
